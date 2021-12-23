@@ -148,14 +148,19 @@ app.post("/register", async(req,res) => {
 })
 app.post("/login",
     passport.authenticate("local", {failureRedirect: "/failureAuth"}), (req,res) => {
-    res.status(200).send("Logged in successfully.");
+    res.status(200).redirect("/posts");
 });
+
+app.get("/logout", blockNotAuthenticated, (req,res) => {
+    req.logout();
+    res.status(200).send("logged out successfully");
+})
 
 // GOOGLE AUTH ROUTES
 app.get("/auth", passport.authenticate("google", { scope: ["profile"] }));
 
 app.get("/auth/callback", passport.authenticate("google", { failureRedirect: "/failureAuth"}), (req,res) => {
-    res.status(200).send("Logged in successfully.");
+    res.status(200).redirect("/posts");
 });
 
 // FAILURE REDIRECT
@@ -166,15 +171,26 @@ app.get("/failureAuth", (req,res) => {
 
 // ---------------------- POSTS ROUTES ---------------------- //
 
-// get all
+// GET ALL POSTS
+app.get("/posts", blockNotAuthenticated, (req,res) => {
+    res.status(200).send(req.user.posts);
+});
 
-app.get("/posts", async (req,res) => {
+// ADD A POST
+
+// DELETE A POST
+
+// PATCH A POST
+
+
+// BLOCK PEOPLE WITH NO AUTHENTICATION
+function blockNotAuthenticated(req,res,next) {
     if (req.isAuthenticated()) {
-        res.status(200).send(req.user.posts);
+        next();
     } else {
-        res.status(403).send("Please Log In")
+        res.status(403).send("No authentication.");
     }
-})
+}
 
 
 const port = 4000 || process.env.port;
