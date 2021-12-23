@@ -109,15 +109,15 @@ passport.deserializeUser( async(serialId,done) => {
 // LOCAL AUTH ROUTES
 app.post("/register", async(req,res) => {
     if (!req.body.username || !req.body.password) {
-        res.status(403).send("both username and password are required.");
+        res.status(403).send("Both username and password are required.");
         return;
     }
     const username = req.body.username;
     const password = await bcryptjs.hash(req.body.password,10);
     const findUsername = await User.findOne({username:username});
-        // used username
+    // username is used
     if (findUsername) {
-        res.status(403).send("username used");
+        res.status(403).send("The username is alrady used.");
     } else {
         const createUser = new User({
             username: username,
@@ -129,14 +129,21 @@ app.post("/register", async(req,res) => {
         })
         createUser.save((err) => {
             if (err) {console.log(err)}
-            else {res.sendStatus(200)}
+            else {res.status(200).send("registered successfully")}
         })
     }
 })
 app.post("/login",
+    blockAuthenticated,
     passport.authenticate("local", {failureRedirect: "/failureAuth"}), (req,res) => {
-    res.status(200).redirect("/posts");
+    res.redirect("/posts");
 });
+
+// TEMPORARY FOR TESTING ONLY (get /logout)
+app.get("/logout", blockNotAuthenticated, (req,res) => {
+    req.logout();
+    res.status(200).send("logged out successfully");
+})
 
 app.post("/logout", blockNotAuthenticated, (req,res) => {
     req.logout();
@@ -144,10 +151,10 @@ app.post("/logout", blockNotAuthenticated, (req,res) => {
 })
 
 // GOOGLE AUTH ROUTES
-app.get("/auth", passport.authenticate("google", { scope: ["profile"] }));
+app.get("/auth", blockAuthenticated, passport.authenticate("google", { scope: ["profile"] }));
 
 app.get("/auth/callback", passport.authenticate("google", { failureRedirect: "/failureAuth"}), (req,res) => {
-    res.status(200).redirect("/posts");
+    res.redirect("/posts");
 });
 
 // FAILURE REDIRECT
@@ -164,18 +171,77 @@ app.get("/posts", blockNotAuthenticated, (req,res) => {
 });
 
 // ADD A POST
+app.post("/posts", blockNotAuthenticated, (req,res) => {
+    const serialId = req.user.serialId;
+    const item = req.body.item;
+    const des = req.body.des;
+    if (!item || !des) {
+        res.status(403).send("Both title and detail are required.");
+        return;
+    }
+    const date = new Date().getTime();
+    User.updateOne(
+        {serialId:serialId},
+        {$push:{posts:{item:item,des:des,date:date}}},
+        (err,result) => {
+            if (err) {console.log(err)}
+            else {
+                res.redirect("/posts");
+            }
+        }
+    )
+    
+})
 
 // DELETE A POST
+app.delete("/posts/:itemId", blockNotAuthenticated, (req,res) => {
+    const itemId = req.params.itemId;
+    const serialId = req.user.serialId;
+    User.updateOne(
+        {serialId:serialId},
+        {$pull: {posts:{_id:itemId}}},
+        err => {
+            if (err) {console.log(err)}
+            else {
+                res.status(200).send("deleted successfully");
+            }
+        }
+    )
+})
 
-// PATCH A POST
-
+// UPDATE A POST
+app.patch("/posts/:itemId", blockNotAuthenticated, (req,res) => {
+    const itemId = req.params.itemId;
+    const serialId = req.user.serialId;
+    const newDes = req.body.des;
+    User.updateOne(
+        {serialId: serialId,
+        "posts._id": itemId},
+        { $set: {"posts.$.des":newDes}},
+        (err) => {
+            if (err) {console.log(err)}
+            else {
+                res.status(200).send("updated successfully");
+            }
+        }
+    )
+})
 
 // BLOCK PEOPLE WITH NO AUTHENTICATION
 function blockNotAuthenticated(req,res,next) {
     if (req.isAuthenticated()) {
         next();
     } else {
-        res.status(403).send("No authentication.");
+        res.status(403).send("There is no authentication.");
+    }
+}
+
+// BLOCK PEOPLE WHO ALREADY LOGGED IN
+function blockAuthenticated(req,res,next) {
+    if (!req.isAuthenticated()) {
+        next();
+    } else {
+        res.status(403).send("already logged in");
     }
 }
 
