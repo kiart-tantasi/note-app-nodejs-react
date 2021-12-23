@@ -108,7 +108,6 @@ passport.use( new GoogleStrategy({
 // SERIALIZE - DESERIALIZE
 passport.serializeUser((user,done) => done(null, user.loginId));
 passport.deserializeUser( async(loginId,done) => {
-    console.log(loginId);
     // Google Strategy
     if (loginId.substring(0,6) == "google") {
         const user =  await GoogleUser.findOne({loginId:loginId});
