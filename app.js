@@ -18,29 +18,22 @@ const postSchema = mongoose.Schema({
     des: String,
     date: Number
 });
-const localUserSchema = mongoose.Schema({
-    username: String,
-    loginId: String,
-    password: String,
-    joinDate: Number,
-    posts: [postSchema],
-    archives: [postSchema]
-})
-const googleUserSchema = mongoose.Schema({
+const userSchema = mongoose.Schema({
     googleId: String,
-    loginId: String,
+    username: String,
+    password: String,
+    serialId: String,
     name: String,
     joinDate: Number,
     posts: [postSchema],
     archives: [postSchema]
-});
-const LocalUser = mongoose.model("LocalUser", localUserSchema);
-const GoogleUser = mongoose.model("GoogleUser", googleUserSchema);
+})
+const User = mongoose.model("User", userSchema);
 
 // ---- TESTING CODE ----
 
 // async function test() {
-//     const res = await LocalUser.findOne({username:"admin"});
+//     const res = await User.findOne({username:"admin"});
 //     console.log(res);
 // }
 // test();
@@ -59,7 +52,7 @@ app.use(passport.session());
 // LOCAL STRATEGY
 passport.use(new LocalStrategy(
     async function(username, password, done) {
-        const user = await LocalUser.findOne({ username: username });
+        const user = await User.findOne({ username: username });
         // No existing username
         if (!user) {
             return done(null, false);
@@ -81,18 +74,19 @@ passport.use( new GoogleStrategy({
     callbackURL: "http://localhost:4000/auth/callback"
 },
     async function(accessToken, refreshToken, profile, cb) {
-        const user = await GoogleUser.findOne({googleId:profile.id});
+        const user = await User.findOne({googleId:profile.id});
         // FIND OR CREATE
         if (!user) {
             const userObject = {
                 googleId: profile.id,
-                loginId: "google" + profile.id,
+                serialId: "google" + profile.id,
                 name: profile.displayName,
                 joinDate: new Date().getTime(),
                 posts: [{ item: "โพสต์แรกของฉัน", des: "ดูแลสุขภาพด้วยครับ", date: new Date().getTime()}],
                 archives: [{ item: "โพสต์ที่ถูกบันทึก", des: "โพสต์ที่ถูกบันทึกจะไม่แสดงในหน้าหลักของแอปโพสต์อิท", date: new Date().getTime()}]
             }
-            const createUser = new GoogleUser(userObject);
+            
+            const createUser = new User(userObject);
             createUser.save((err) => {
                 if (err) {console.log(err)}
                 else {
@@ -106,17 +100,10 @@ passport.use( new GoogleStrategy({
 ))
 
 // SERIALIZE - DESERIALIZE
-passport.serializeUser((user,done) => done(null, user.loginId));
-passport.deserializeUser( async(loginId,done) => {
-    // Google Strategy
-    if (loginId.substring(0,6) == "google") {
-        const user =  await GoogleUser.findOne({loginId:loginId});
-        return done(null, user);
-    // Local Strategy
-    } else if (loginId.substring(0,5) == "local") {
-        const user = await LocalUser.findOne({loginId:loginId});
-        return done(null, user);
-    }
+passport.serializeUser((user,done) => done(null, user.serialId));
+passport.deserializeUser( async(serialId,done) => {
+    const user = await User.findOne({serialId:serialId});
+    return done(null, user);
 })
 
 // LOCAL AUTH ROUTES
@@ -127,14 +114,14 @@ app.post("/register", async(req,res) => {
     }
     const username = req.body.username;
     const password = await bcryptjs.hash(req.body.password,10);
-    const findUsername = await LocalUser.findOne({username:username});
+    const findUsername = await User.findOne({username:username});
         // used username
     if (findUsername) {
         res.status(403).send("username used");
     } else {
-        const createUser = new LocalUser({
+        const createUser = new User({
             username: username,
-            loginId: "local" + username,
+            serialId: "local" + username,
             password: password,
             joinDate: new Date().getTime(),
             posts: [{ item: "โพสต์แรกของฉัน", des: "ดูแลสุขภาพด้วยครับ", date: new Date().getTime()}],
@@ -151,7 +138,7 @@ app.post("/login",
     res.status(200).redirect("/posts");
 });
 
-app.get("/logout", blockNotAuthenticated, (req,res) => {
+app.post("/logout", blockNotAuthenticated, (req,res) => {
     req.logout();
     res.status(200).send("logged out successfully");
 })
