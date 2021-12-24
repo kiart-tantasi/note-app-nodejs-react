@@ -61,7 +61,6 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }))
-app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(passport.initialize());
 app.use(passport.session());
 
