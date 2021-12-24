@@ -2,9 +2,17 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
+app.use(express.urlencoded({extended:false}));
+app.use(express.json());
+app.use(
+    cors({
+      origin: "http://localhost:3000", // <-- location of the react app were connecting to
+      credentials: true
+    })
+  );
+// AUTHENTICATION
 const bcryptjs = require("bcryptjs");
 const session = require("express-session");
-const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
@@ -179,7 +187,7 @@ app.get("/failureAuth", (req,res) => {
 
 // GET ALL POSTS
 app.get("/posts", blockNotAuthenticated, (req,res) => {
-    res.status(200).send(req.user.posts);
+    res.status(200).json(req.user.posts);
 });
 
 // ADD A POST
