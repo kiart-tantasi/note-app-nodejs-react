@@ -1,19 +1,16 @@
 require("dotenv").config();
-// EXPRESS SETUP
 const express = require("express");
 const app = express();
 const cors = require("cors");
-app.use(express.urlencoded({extended:false}));
-app.use(express.json());
-app.use(cors());
-// AUTHENTICATION
 const bcryptjs = require("bcryptjs");
 const session = require("express-session");
+const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 // Mongoose Setup
 const mongoose = require("mongoose");
+
 mongoose.connect("mongodb://localhost:27017/postitDB");
 const postSchema = mongoose.Schema({
     item: String,
@@ -42,12 +39,21 @@ const User = mongoose.model("User", userSchema);
 
 // ---------------------
 
-// PASSPORT INITIALIZATION
+// MIDDLEWARE
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
+app.use(
+    cors({
+        origin: "http://localhost:3000",
+        credentials: true
+    })
+);
 app.use(session({
     secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false
+    resave: true,
+    saveUninitialized: true
 }))
+app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -138,8 +144,12 @@ app.post("/register", async(req,res) => {
 app.post("/login",
     blockAuthenticated,
     passport.authenticate("local", {failureRedirect: "/failureAuth"}), (req,res) => {
-    res.redirect("/posts");
+    res.send("Successfully Authenticated.")
 });
+// JUST FOR TESTING
+app.get("/user", (req, res) => {
+    res.send(req.user); // The req.user stores the entire user that has been authenticated inside of it.
+  });
 
 // TEMPORARY FOR TESTING ONLY (get /logout)
 app.get("/logout", blockNotAuthenticated, (req,res) => {
