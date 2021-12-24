@@ -2,8 +2,10 @@ require("dotenv").config();
 // EXPRESS SETUP
 const express = require("express");
 const app = express();
+const cors = require("cors");
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
+app.use(cors());
 // AUTHENTICATION
 const bcryptjs = require("bcryptjs");
 const session = require("express-session");
