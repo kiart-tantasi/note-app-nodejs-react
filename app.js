@@ -5,7 +5,12 @@ const app = express();
 const cors = require("cors");
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
-app.use(cors());
+app.use(
+    cors({
+      origin: "http://localhost:3000", // <-- location of the react app were connecting to
+      credentials: true
+    })
+  );
 // AUTHENTICATION
 const bcryptjs = require("bcryptjs");
 const session = require("express-session");
@@ -169,7 +174,7 @@ app.get("/failureAuth", (req,res) => {
 
 // GET ALL POSTS
 app.get("/posts", blockNotAuthenticated, (req,res) => {
-    res.status(200).send(req.user.posts);
+    res.status(200).json(req.user.posts);
 });
 
 // ADD A POST
