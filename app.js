@@ -6,7 +6,7 @@ app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 app.use(
     cors({
-      origin: "http://localhost:3000", // <-- location of the react app were connecting to
+      origin: "https://postitappbyme-server.herokuapp.com",
       credentials: true
     })
   );
@@ -49,15 +49,6 @@ const User = mongoose.model("User", userSchema);
 
 // ---------------------
 
-// MIDDLEWARE
-app.use(express.json());
-app.use(express.urlencoded({extended:true}));
-app.use(
-    cors({
-        origin: "http://localhost:3000",
-        credentials: true
-    })
-);
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -89,7 +80,7 @@ passport.use(new LocalStrategy(
 passport.use( new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: "http://localhost:4000/auth/callback"
+    callbackURL: "https://postitappbyme-server.herokuapp.com/auth/callback"
 },
     async function(accessToken, refreshToken, profile, cb) {
         const user = await User.findOne({googleId:profile.id});
@@ -179,8 +170,8 @@ app.post("/logout", blockNotAuthenticated, (req,res) => {
 // GOOGLE AUTH ROUTES
 app.get("/auth", blockAuthenticated, passport.authenticate("google", { scope: ["profile"] }));
 
-app.get("/auth/callback", passport.authenticate("google", { failureRedirect: "http://localhost:4000/failureAuth"}), (req,res) => {
-    res.redirect("http://localhost:3000");
+app.get("/auth/callback", passport.authenticate("google", { failureRedirect: "https://postitappbyme-server.herokuapp.com/failureAuth"}), (req,res) => {
+    res.redirect("https://post-it-app-by-me.herokuapp.com");
 });
 
 // FAILURE REDIRECT
