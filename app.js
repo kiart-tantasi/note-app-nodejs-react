@@ -6,7 +6,7 @@ app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 app.use(
     cors({
-      origin: process.env.ORIGIN,
+      origin: "http://localhost:50009", // port from heroku
       credentials: true
     })
   );
