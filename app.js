@@ -6,7 +6,7 @@ app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 app.use(
     cors({
-      origin: "https://postitappbyme-server.herokuapp.com",
+      origin: "https://post-it-app-by-me.herokuapp.com/",
       credentials: true
     })
   );
