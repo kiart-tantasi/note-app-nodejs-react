@@ -18,8 +18,10 @@ const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 // Mongoose Setup
 const mongoose = require("mongoose");
-
-mongoose.connect("mongodb://localhost:27017/postitDB");
+const atlasurl = 
+"mongodb+srv://" + process.env.DB_ID + ":" + process.env.DB_PASS + "@cluster0.wt1i5.mongodb.net/postitDB";
+mongoose.connect(atlasurl);
+// mongoose.connect("mongodb://localhost:27017/postitDB");
 const postSchema = mongoose.Schema({
     item: String,
     des: String,
@@ -60,7 +62,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: {maxAge: 10*60*1000} 
+    cookie: {maxAge: 60*60*1000} 
 }))
 app.use(passport.initialize());
 app.use(passport.session());
@@ -133,7 +135,7 @@ app.post("/register", async(req,res) => {
     const findUsername = await User.findOne({username:username});
     // username is used
     if (findUsername) {
-        res.status(403).send("The username is alrady used.");
+        res.status(403).send("The username is already used.");
     } else {
         const createUser = new User({
             username: username,
@@ -177,8 +179,7 @@ app.post("/logout", blockNotAuthenticated, (req,res) => {
 // GOOGLE AUTH ROUTES
 app.get("/auth", blockAuthenticated, passport.authenticate("google", { scope: ["profile"] }));
 
-app.get("/auth/callback", passport.authenticate("google", { failureRedirect: "/failureAuth"}), (req,res) => {
-    // console.log("CALLBACK");
+app.get("/auth/callback", passport.authenticate("google", { failureRedirect: "http://localhost:4000/failureAuth"}), (req,res) => {
     res.redirect("http://localhost:3000");
 });
 
