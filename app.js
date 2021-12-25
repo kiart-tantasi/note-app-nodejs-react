@@ -58,8 +58,9 @@ app.use(
 );
 app.use(session({
     secret: process.env.SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true
+    resave: false,
+    saveUninitialized: false,
+    cookie: {maxAge: 10*60*1000} //10m 
 }))
 app.use(passport.initialize());
 app.use(passport.session());
@@ -151,11 +152,15 @@ app.post("/register", async(req,res) => {
 app.post("/login",
     blockAuthenticated,
     passport.authenticate("local", {failureRedirect: "/failureAuth"}), (req,res) => {
-    res.send("Successfully Authenticated.")
+    res.status(200).send("Successfully Authenticated.");
 });
 // JUST FOR TESTING
 app.get("/user", (req, res) => {
-    res.send(req.user); // The req.user stores the entire user that has been authenticated inside of it.
+    if (req.isAuthenticated()) {
+        res.sendStatus(200)
+    } else {
+        res.sendStatus(404);
+    }
   });
 
 // TEMPORARY FOR TESTING ONLY (get /logout)
@@ -173,13 +178,14 @@ app.post("/logout", blockNotAuthenticated, (req,res) => {
 app.get("/auth", blockAuthenticated, passport.authenticate("google", { scope: ["profile"] }));
 
 app.get("/auth/callback", passport.authenticate("google", { failureRedirect: "/failureAuth"}), (req,res) => {
-    res.redirect("/posts");
+    // console.log("CALLBACK");
+    res.redirect("http://localhost:3000");
 });
 
 // FAILURE REDIRECT
 
 app.get("/failureAuth", (req,res) => {
-    res.send("Authentication failed.")
+    res.status(404).send("Authentication failed.")
 })
 
 // ---------------------- POSTS ROUTES ---------------------- //
@@ -194,8 +200,8 @@ app.post("/posts", blockNotAuthenticated, (req,res) => {
     const serialId = req.user.serialId;
     const item = req.body.item;
     const des = req.body.des;
-    if (!item || !des) {
-        res.status(403).send("Both title and detail are required.");
+    if (!item) {
+        res.status(403).send("The title fill is required.");
         return;
     }
     const date = new Date().getTime();
@@ -205,7 +211,7 @@ app.post("/posts", blockNotAuthenticated, (req,res) => {
         (err,result) => {
             if (err) {console.log(err)}
             else {
-                res.redirect("/posts");
+                res.sendStatus(200);
             }
         }
     )
