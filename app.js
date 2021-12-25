@@ -60,7 +60,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: {maxAge: 10*60*1000} //10m 
+    cookie: {maxAge: 10*60*1000} 
 }))
 app.use(passport.initialize());
 app.use(passport.session());
@@ -125,7 +125,7 @@ passport.deserializeUser( async(serialId,done) => {
 // LOCAL AUTH ROUTES
 app.post("/register", async(req,res) => {
     if (!req.body.username || !req.body.password) {
-        res.status(403).send("Both username and password are required.");
+        res.status(400).send("Both username and password are required.");
         return;
     }
     const username = req.body.username;
@@ -159,7 +159,7 @@ app.get("/user", (req, res) => {
     if (req.isAuthenticated()) {
         res.sendStatus(200)
     } else {
-        res.sendStatus(404);
+        res.sendStatus(403);
     }
   });
 
@@ -185,7 +185,7 @@ app.get("/auth/callback", passport.authenticate("google", { failureRedirect: "/f
 // FAILURE REDIRECT
 
 app.get("/failureAuth", (req,res) => {
-    res.status(404).send("Authentication failed.")
+    res.status(401).send("Authentication failed.")
 })
 
 // ---------------------- POSTS ROUTES ---------------------- //
@@ -201,20 +201,20 @@ app.post("/posts", blockNotAuthenticated, (req,res) => {
     const item = req.body.item;
     const des = req.body.des;
     if (!item) {
-        res.status(403).send("The title fill is required.");
+        res.status(400).send("The title fill is required.");
         return;
     }
     const date = new Date().getTime();
-    User.updateOne(
-        {serialId:serialId},
-        {$push:{posts:{item:item,des:des,date:date}}},
-        (err,result) => {
+    User.findOne({serialId:serialId},(err,result) => {
+        result.posts.push({item:item,des:des,date:date});
+        const id = result.posts[result.posts.length-1]._id;
+        result.save((err) => {
             if (err) {console.log(err)}
             else {
-                res.sendStatus(200);
+                res.status(200).json({id:id,date:date});
             }
-        }
-    )
+        })
+    })
     
 })
 
