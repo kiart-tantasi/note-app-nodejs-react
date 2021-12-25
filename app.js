@@ -263,5 +263,5 @@ function blockAuthenticated(req,res,next) {
 }
 
 
-const port = 4000 || process.env.port;
+const port = process.env.port || 4000;
 app.listen(port, () => console.log("running on", port));
