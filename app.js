@@ -6,7 +6,7 @@ app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 app.use(
     cors({
-      origin: "http://localhost:3000", // <-- location of the react app were connecting to
+      origin: "http://localhost:3000",
       credentials: true
     })
   );
@@ -48,16 +48,6 @@ const User = mongoose.model("User", userSchema);
 // test();
 
 // ---------------------
-
-// MIDDLEWARE
-app.use(express.json());
-app.use(express.urlencoded({extended:true}));
-app.use(
-    cors({
-        origin: "http://localhost:3000",
-        credentials: true
-    })
-);
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
