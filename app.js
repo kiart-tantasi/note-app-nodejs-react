@@ -88,7 +88,7 @@ passport.use(new LocalStrategy(
 passport.use( new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: "https://postitappbyme-server.herokuapp.com/auth/callback"
+    callbackURL: "https://post-it-app-by-me.herokuapp.com/auth/callback"
 },
     async function(accessToken, refreshToken, profile, cb) {
         const user = await User.findOne({googleId:profile.id});
@@ -178,7 +178,7 @@ app.post("/logout", blockNotAuthenticated, (req,res) => {
 // GOOGLE AUTH ROUTES
 app.get("/auth", blockAuthenticated, passport.authenticate("google", { scope: ["profile"] }));
 
-app.get("/auth/callback", passport.authenticate("google", { failureRedirect: "https://postitappbyme-server.herokuapp.com/failureAuth"}), (req,res) => {
+app.get("/auth/callback", passport.authenticate("google", { failureRedirect: "https://post-it-app-by-me.herokuapp.com/failureAuth"}), (req,res) => {
     res.redirect("https://post-it-app-by-me.herokuapp.com");
 });
 
