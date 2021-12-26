@@ -1,27 +1,23 @@
+// IMPORT
 require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
-app.use(express.urlencoded({extended:false}));
-app.use(express.json());
-app.use(
-    cors({
-      origin: "http://localhost:3000",
-      credentials: true
-    })
-  );
-// AUTHENTICATION
 const bcryptjs = require("bcryptjs");
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-// Mongoose Setup
 const mongoose = require("mongoose");
-const atlasurl = 
-"mongodb+srv://" + process.env.DB_ID + ":" + process.env.DB_PASS + "@cluster0.wt1i5.mongodb.net/postitDB";
-mongoose.connect(atlasurl);
-// mongoose.connect("mongodb://localhost:27017/postitDB");
+ 
+// MIDDLEWARE
+app.use(express.urlencoded({extended:false}));
+app.use(express.json());
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+
+// MONGODB (MONGOOSE)
+const atlasurl = "mongodb+srv://" + process.env.DB_ID + ":" + process.env.DB_PASS + "@cluster0.wt1i5.mongodb.net/postitDB";
+mongoose.connect(atlasurl); // mongoose.connect("mongodb://localhost:27017/postitDB");
 const postSchema = mongoose.Schema({
     item: String,
     des: String,
@@ -39,15 +35,7 @@ const userSchema = mongoose.Schema({
 })
 const User = mongoose.model("User", userSchema);
 
-// ---- TESTING CODE ----
-
-// async function test() {
-//     const res = await User.findOne({username:"admin"});
-//     console.log(res);
-// }
-// test();
-
-// ---------------------
+// INITIALIZE PASSPORT - SESSION
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -114,7 +102,9 @@ passport.deserializeUser( async(serialId,done) => {
     return done(null, user);
 })
 
-// LOCAL AUTH ROUTES
+// ROUTES
+
+// REGISTER LOGIN USER
 app.post("/register", async(req,res) => {
     if (!req.body.username || !req.body.password) {
         res.status(400).send("Both username and password are required.");
@@ -141,12 +131,13 @@ app.post("/register", async(req,res) => {
         })
     }
 })
+
 app.post("/login",
     blockAuthenticated,
     passport.authenticate("local", {failureRedirect: "/failureAuth"}), (req,res) => {
     res.status(200).send("Successfully Authenticated.");
 });
-// JUST FOR TESTING
+
 app.get("/user", (req, res) => {
     if (req.isAuthenticated()) {
         res.sendStatus(200)
@@ -155,7 +146,7 @@ app.get("/user", (req, res) => {
     }
   });
 
-// TEMPORARY FOR TESTING ONLY (get /logout)
+// ( FOR TESTING )
 app.get("/logout", blockNotAuthenticated, (req,res) => {
     req.logout();
     res.status(200).send("logged out successfully");
@@ -169,17 +160,15 @@ app.post("/logout", blockNotAuthenticated, (req,res) => {
 // GOOGLE AUTH ROUTES
 app.get("/auth", blockAuthenticated, passport.authenticate("google", { scope: ["profile"] }));
 
-app.get("/auth/callback", passport.authenticate("google", { failureRedirect: "http://localhost:4000/failureAuth"}), (req,res) => {
+app.get("/auth/callback", passport.authenticate("google", { failureRedirect: "/failureAuth"}), (req,res) => {
     res.redirect("http://localhost:3000");
 });
-
-// FAILURE REDIRECT
 
 app.get("/failureAuth", (req,res) => {
     res.status(401).send("Authentication failed.")
 })
 
-// ---------------------- POSTS ROUTES ---------------------- //
+// ADD, DELETE AND UPDATE POST ROUTES
 
 // GET ALL POSTS
 app.get("/posts", blockNotAuthenticated, (req,res) => {
@@ -260,7 +249,6 @@ function blockAuthenticated(req,res,next) {
         res.status(403).send("already logged in");
     }
 }
-
 
 const port = 4000 || process.env.port;
 app.listen(port, () => console.log("running on", port));
