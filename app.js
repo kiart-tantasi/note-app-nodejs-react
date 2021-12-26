@@ -9,10 +9,12 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const mongoose = require("mongoose");
+const path = require("path");
  
 // MIDDLEWARE
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'build')));
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
 // MONGODB (MONGOOSE)
@@ -231,6 +233,12 @@ app.patch("/posts/:itemId", blockNotAuthenticated, (req,res) => {
         }
     )
 })
+
+// EVERY OTHERS' AND REACT'S ROUTES
+app.get('/*', function(req,res) {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
 
 // BLOCK PEOPLE WITH NO AUTHENTICATION
 function blockNotAuthenticated(req,res,next) {
