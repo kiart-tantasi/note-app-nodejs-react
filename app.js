@@ -174,7 +174,7 @@ app.post("/logout", blockNotAuthenticated, (req,res) => {
 })
 
 // GOOGLE AUTH ROUTES
-app.get("/auth", blockAuthenticated, passport.authenticate("google", { scope: ["profile"] }));
+app.get("/auth", passport.authenticate("google", { scope: ["profile"] }));
 
 app.get("/auth/callback", passport.authenticate("google", { failureRedirect: "/"}), (req,res) => {
     res.redirect("/");
