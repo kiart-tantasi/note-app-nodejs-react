@@ -4,14 +4,16 @@ const app = express();
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const MongoStore = require("connect-mongo");
+const path = require("path");
+app.use(express.static(path.resolve(__dirname, "./build"))); // homepage
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
-app.use(
-    cors({
-        origin: "http://localhost:3000",
-        credentials: true
-    })
-);
+// app.use(
+//     cors({
+//         origin: "http://localhost:3000",
+//         credentials: true
+//     })
+// );
 app.use(cookieParser());
 app.enable("trust proxy");
 // AUTHENTICATION
@@ -249,6 +251,12 @@ app.patch("/posts/:itemId", blockNotAuthenticated, (req,res) => {
         }
     )
 })
+
+// REDIRECT FROM ALL OTHER ROUTES
+app.get("/*", (req,res) => {
+    res.redirect("/");
+})
+
 
 // BLOCK PEOPLE WITH NO AUTHENTICATION
 function blockNotAuthenticated(req,res,next) {
