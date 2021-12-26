@@ -2,15 +2,18 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const MongoStore = require("connect-mongo");
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 app.use(
     cors({
-      origin: "http://localhost:3000",
-      credentials: true
+        origin: "http://localhost:3000",
+        credentials: true
     })
-  );
+);
+app.use(cookieParser());
+app.enable("trust proxy");
 // AUTHENTICATION
 const bcryptjs = require("bcryptjs");
 const session = require("express-session");
@@ -54,6 +57,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    proxy: true,
     store: MongoStore.create({ mongoUrl: "mongodb+srv://" + process.env.DB_ID + ":" + process.env.DB_PASS + "@cluster0.wt1i5.mongodb.net/sessionDB" }),
     cookie: {maxAge: 60*60*1000} 
 }))
