@@ -2,7 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const cookieParser = require("cookie-parser");
 const MongoStore = require("connect-mongo");
 const path = require("path");
 app.use(express.static(path.resolve(__dirname, "./build"))); // homepage
@@ -14,7 +13,6 @@ app.use(express.json());
 //         credentials: true
 //     })
 // );
-app.use(cookieParser());
 app.enable("trust proxy");
 // AUTHENTICATION
 const bcryptjs = require("bcryptjs");
