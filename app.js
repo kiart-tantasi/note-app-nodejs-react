@@ -14,7 +14,7 @@ const path = require("path");
 // MIDDLEWARE
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, "build")));
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
 // MONGODB (MONGOOSE)
@@ -162,12 +162,12 @@ app.post("/logout", blockNotAuthenticated, (req,res) => {
 // GOOGLE AUTH ROUTES
 app.get("/auth", blockAuthenticated, passport.authenticate("google", { scope: ["profile"] }));
 
-app.get("/auth/callback", passport.authenticate("google", { failureRedirect: "/failureAuth"}), (req,res) => {
+app.get("/auth/callback", passport.authenticate("google", { failureRedirect: "/authentication"}), (req,res) => {
     res.redirect("http://localhost:3000");
 });
 
 app.get("/failureAuth", (req,res) => {
-    res.status(401).send("Authentication failed.")
+    res.status(401).send("authentication failed.")
 })
 
 // ADD, DELETE AND UPDATE POST ROUTES
@@ -235,10 +235,9 @@ app.patch("/posts/:itemId", blockNotAuthenticated, (req,res) => {
 })
 
 // EVERY OTHERS' AND REACT'S ROUTES
-app.get('/*', function(req,res) {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+app.get("/*", function(req,res) {
+    res.sendFile(path.join(__dirname, "build", "index.html"));
 });
-
 
 // BLOCK PEOPLE WITH NO AUTHENTICATION
 function blockNotAuthenticated(req,res,next) {
