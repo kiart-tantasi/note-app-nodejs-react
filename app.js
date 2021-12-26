@@ -176,8 +176,8 @@ app.post("/logout", blockNotAuthenticated, (req,res) => {
 // GOOGLE AUTH ROUTES
 app.get("/auth", blockAuthenticated, passport.authenticate("google", { scope: ["profile"] }));
 
-app.get("/auth/callback", passport.authenticate("google", { failureRedirect: "https://post-it-app-by-me.herokuapp.com/failureAuth"}), (req,res) => {
-    res.redirect("https://post-it-app-by-me.herokuapp.com");
+app.get("/auth/callback", passport.authenticate("google", { failureRedirect: "/"}), (req,res) => {
+    res.redirect("/");
 });
 
 // FAILURE REDIRECT
