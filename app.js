@@ -1,8 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-const cors = require("cors");
-const MongoStore = require("connect-mongo");
+// const cors = require("cors");
+// const MongoStore = require("connect-mongo");
 const path = require("path");
 app.use(express.static(path.resolve(__dirname, "./build"))); // homepage
 app.use(express.urlencoded({extended:false}));
@@ -13,7 +13,7 @@ app.use(express.json());
 //         credentials: true
 //     })
 // );
-app.enable("trust proxy");
+// app.enable("trust proxy");
 // AUTHENTICATION
 const bcryptjs = require("bcryptjs");
 const session = require("express-session");
@@ -57,8 +57,8 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    proxy: true,
-    store: MongoStore.create({ mongoUrl: "mongodb+srv://" + process.env.DB_ID + ":" + process.env.DB_PASS + "@cluster0.wt1i5.mongodb.net/sessionDB" }),
+    // proxy: true,
+    // store: MongoStore.create({ mongoUrl: "mongodb+srv://" + process.env.DB_ID + ":" + process.env.DB_PASS + "@cluster0.wt1i5.mongodb.net/sessionDB" }),
     cookie: {maxAge: 60*60*1000} 
 }))
 app.use(passport.initialize());
