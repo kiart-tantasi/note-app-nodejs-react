@@ -69,7 +69,7 @@ passport.use(new LocalStrategy(
 passport.use( new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: "http://localhost:4000/auth/callback"
+    callbackURL: "https://post-it-app-by-me.herokuapp.com/auth/callback"
 },
     async function(accessToken, refreshToken, profile, cb) {
         const user = await User.findOne({googleId:profile.id});
@@ -163,7 +163,7 @@ app.post("/logout", blockNotAuthenticated, (req,res) => {
 app.get("/auth", blockAuthenticated, passport.authenticate("google", { scope: ["profile"] }));
 
 app.get("/auth/callback", passport.authenticate("google", { failureRedirect: "/authentication"}), (req,res) => {
-    res.redirect("http://localhost:3000");
+    res.redirect("/");
 });
 
 app.get("/failureAuth", (req,res) => {
