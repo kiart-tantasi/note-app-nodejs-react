@@ -59,7 +59,7 @@ app.use(session({
     saveUninitialized: false,
     // proxy: true,
     // store: MongoStore.create({ mongoUrl: "mongodb+srv://" + process.env.DB_ID + ":" + process.env.DB_PASS + "@cluster0.wt1i5.mongodb.net/sessionDB" }),
-    cookie: {maxAge: 60*60*1000} 
+    cookie: {maxAge: 7*24*60*60*1000} 
 }))
 app.use(passport.initialize());
 app.use(passport.session());
