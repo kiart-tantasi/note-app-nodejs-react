@@ -1,4 +1,4 @@
-// IMPORT
+// ------------------ IMPORT ------------------ //
 require("dotenv").config();
 const express = require("express");
 const app = express();
@@ -10,14 +10,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const mongoose = require("mongoose");
 const path = require("path");
- 
-// MIDDLEWARE
-app.use(express.urlencoded({extended:false}));
-app.use(express.json());
-app.use(express.static(path.join(__dirname, "build")));
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
-
-// MONGODB (MONGOOSE)
+// ------------------ DATABASE ------------------ //
 const atlasurl = "mongodb+srv://" + process.env.DB_ID + ":" + process.env.DB_PASS + "@cluster0.wt1i5.mongodb.net/postitDB";
 mongoose.connect(atlasurl); // mongoose.connect("mongodb://localhost:27017/postitDB");
 const postSchema = mongoose.Schema({
@@ -36,8 +29,11 @@ const userSchema = mongoose.Schema({
     archives: [postSchema]
 })
 const User = mongoose.model("User", userSchema);
-
-// INITIALIZE PASSPORT - SESSION
+// ------------------ MIDDLEWARE ------------------ //
+app.use(express.urlencoded({extended:false}));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "build")));
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -46,26 +42,19 @@ app.use(session({
 }))
 app.use(passport.initialize());
 app.use(passport.session());
-
-// LOCAL STRATEGY
 passport.use(new LocalStrategy(
     async function(username, password, done) {
         const user = await User.findOne({ username: username });
-        // No existing username
         if (!user) {
             return done(null, false);
-        //Correct Password
         } else if (await bcryptjs.compare(password, user.password)) {
             return done(null, user);
-        // Wrong Password
         } else {
             return done(null, false); 
         }
 
     }
   ));
-
-// GOOGLE STRATEGY
 passport.use( new GoogleStrategy({
     clientID: process.env.TEST_ID,
     clientSecret: process.env.TEST_SECRET,
@@ -73,7 +62,6 @@ passport.use( new GoogleStrategy({
 },
     async function(accessToken, refreshToken, profile, cb) {
         const user = await User.findOne({googleId:profile.id});
-        // FIND OR CREATE
         if (!user) {
             const userObject = {
                 googleId: profile.id,
@@ -96,17 +84,13 @@ passport.use( new GoogleStrategy({
         }
     }
 ))
-
-// SERIALIZE - DESERIALIZE
 passport.serializeUser((user,done) => done(null, user.serialId));
 passport.deserializeUser( async(serialId,done) => {
     const user = await User.findOne({serialId:serialId});
     return done(null, user);
 })
 
-// ROUTES
-
-// REGISTER LOGIN USER
+// ------------------ ROUTES ------------------ //
 app.post("/api/register", async(req,res) => {
     if (!req.body.username || !req.body.password) {
         res.status(400).send("Both username and password are required.");
@@ -115,7 +99,6 @@ app.post("/api/register", async(req,res) => {
     const username = req.body.username;
     const password = await bcryptjs.hash(req.body.password,10);
     const findUsername = await User.findOne({username:username});
-    // username is used
     if (findUsername) {
         res.status(403).send("The username is already used.");
     } else {
@@ -148,8 +131,7 @@ app.get("/api/user", (req, res) => {
     }
   });
 
-// ( FOR TESTING )
-app.get("/api/logout", blockNotAuthenticated, (req,res) => {
+app.get("/api/logout", blockNotAuthenticated, (req,res) => { // (GET ONLY FOR FOR TESTING )
     req.logout();
     res.status(200).send("logged out successfully");
 })
@@ -159,7 +141,6 @@ app.post("/api/logout", blockNotAuthenticated, (req,res) => {
     res.status(200).send("logged out successfully");
 })
 
-// GOOGLE AUTH ROUTES
 app.get("/api/auth/google", blockAuthenticated, passport.authenticate("google", { scope: ["profile"] }));
 
 app.get("/api/auth/callback", passport.authenticate("google", { failureRedirect: "/authentication"}), (req,res) => {
@@ -170,14 +151,11 @@ app.get("/api/failureAuth", (req,res) => {
     res.status(401).send("authentication failed.")
 })
 
-// ADD, DELETE AND UPDATE POST ROUTES
-
-// GET ALL POSTS
+// CRUD REST
 app.get("/api/posts", blockNotAuthenticated, (req,res) => {
     res.status(200).json(req.user.posts);
 });
 
-// ADD A POST
 app.post("/api/posts", blockNotAuthenticated, (req,res) => {
     const serialId = req.user.serialId;
     const item = req.body.item;
@@ -200,7 +178,6 @@ app.post("/api/posts", blockNotAuthenticated, (req,res) => {
     
 })
 
-// DELETE A POST
 app.delete("/api/posts/:itemId", blockNotAuthenticated, (req,res) => {
     const itemId = req.params.itemId;
     const serialId = req.user.serialId;
@@ -216,7 +193,6 @@ app.delete("/api/posts/:itemId", blockNotAuthenticated, (req,res) => {
     )
 })
 
-// UPDATE A POST
 app.patch("/api/posts/:itemId", blockNotAuthenticated, (req,res) => {
     const itemId = req.params.itemId;
     const serialId = req.user.serialId;
@@ -239,7 +215,7 @@ app.get("/*", function(req,res) {
     res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
-// BLOCK PEOPLE WITH NO AUTHENTICATION
+// BLOCK PEOPLE WITH NO AUTHENTICATION AND PEOPLE WHO ALREADY LOGGED IN
 function blockNotAuthenticated(req,res,next) {
     if (req.isAuthenticated()) {
         next();
@@ -247,8 +223,6 @@ function blockNotAuthenticated(req,res,next) {
         res.status(403).send("There is no authentication.");
     }
 }
-
-// BLOCK PEOPLE WHO ALREADY LOGGED IN
 function blockAuthenticated(req,res,next) {
     if (!req.isAuthenticated()) {
         next();
@@ -256,6 +230,5 @@ function blockAuthenticated(req,res,next) {
         res.status(403).send("already logged in");
     }
 }
-
-const port = 4000 || process.env.port;
+const port = process.env.PORT || 4000;
 app.listen(port, () => console.log("running on", port));
