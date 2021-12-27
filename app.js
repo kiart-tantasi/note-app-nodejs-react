@@ -250,10 +250,10 @@ app.patch("/posts/:itemId", blockNotAuthenticated, (req,res) => {
     )
 })
 
-// REDIRECT FROM ALL OTHER ROUTES
-app.get("/*", (req,res) => {
-    res.redirect("/");
-})
+// EVERY OTHERS' AND REACT'S ROUTES
+app.get("/*", function(req,res) {
+    res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 
 // BLOCK PEOPLE WITH NO AUTHENTICATION
