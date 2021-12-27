@@ -67,9 +67,9 @@ passport.use(new LocalStrategy(
 
 // GOOGLE STRATEGY
 passport.use( new GoogleStrategy({
-    clientID: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: "https://post-it-app-by-me.herokuapp.com/auth/callback"
+    clientID: process.env.TEST_ID,
+    clientSecret: process.env.TEST_SECRET,
+    callbackURL: "http://localhost:4000/api/auth/callback"
 },
     async function(accessToken, refreshToken, profile, cb) {
         const user = await User.findOne({googleId:profile.id});
@@ -107,7 +107,7 @@ passport.deserializeUser( async(serialId,done) => {
 // ROUTES
 
 // REGISTER LOGIN USER
-app.post("/register", async(req,res) => {
+app.post("/api/register", async(req,res) => {
     if (!req.body.username || !req.body.password) {
         res.status(400).send("Both username and password are required.");
         return;
@@ -134,13 +134,13 @@ app.post("/register", async(req,res) => {
     }
 })
 
-app.post("/login",
+app.post("/api/login",
     blockAuthenticated,
-    passport.authenticate("local", {failureRedirect: "/failureAuth"}), (req,res) => {
+    passport.authenticate("local", {failureRedirect: "/api/failureAuth"}), (req,res) => {
     res.status(200).send("Successfully Authenticated.");
 });
 
-app.get("/user", (req, res) => {
+app.get("/api/user", (req, res) => {
     if (req.isAuthenticated()) {
         res.sendStatus(200)
     } else {
@@ -149,36 +149,36 @@ app.get("/user", (req, res) => {
   });
 
 // ( FOR TESTING )
-app.get("/logout", blockNotAuthenticated, (req,res) => {
+app.get("/api/logout", blockNotAuthenticated, (req,res) => {
     req.logout();
     res.status(200).send("logged out successfully");
 })
 
-app.post("/logout", blockNotAuthenticated, (req,res) => {
+app.post("/api/logout", blockNotAuthenticated, (req,res) => {
     req.logout();
     res.status(200).send("logged out successfully");
 })
 
 // GOOGLE AUTH ROUTES
-app.get("/auth", blockAuthenticated, passport.authenticate("google", { scope: ["profile"] }));
+app.get("/api/auth/google", blockAuthenticated, passport.authenticate("google", { scope: ["profile"] }));
 
-app.get("/auth/callback", passport.authenticate("google", { failureRedirect: "/authentication"}), (req,res) => {
+app.get("/api/auth/callback", passport.authenticate("google", { failureRedirect: "/authentication"}), (req,res) => {
     res.redirect("/");
 });
 
-app.get("/failureAuth", (req,res) => {
+app.get("/api/failureAuth", (req,res) => {
     res.status(401).send("authentication failed.")
 })
 
 // ADD, DELETE AND UPDATE POST ROUTES
 
 // GET ALL POSTS
-app.get("/posts", blockNotAuthenticated, (req,res) => {
+app.get("/api/posts", blockNotAuthenticated, (req,res) => {
     res.status(200).json(req.user.posts);
 });
 
 // ADD A POST
-app.post("/posts", blockNotAuthenticated, (req,res) => {
+app.post("/api/posts", blockNotAuthenticated, (req,res) => {
     const serialId = req.user.serialId;
     const item = req.body.item;
     const des = req.body.des;
@@ -201,7 +201,7 @@ app.post("/posts", blockNotAuthenticated, (req,res) => {
 })
 
 // DELETE A POST
-app.delete("/posts/:itemId", blockNotAuthenticated, (req,res) => {
+app.delete("/api/posts/:itemId", blockNotAuthenticated, (req,res) => {
     const itemId = req.params.itemId;
     const serialId = req.user.serialId;
     User.updateOne(
@@ -217,7 +217,7 @@ app.delete("/posts/:itemId", blockNotAuthenticated, (req,res) => {
 })
 
 // UPDATE A POST
-app.patch("/posts/:itemId", blockNotAuthenticated, (req,res) => {
+app.patch("/api/posts/:itemId", blockNotAuthenticated, (req,res) => {
     const itemId = req.params.itemId;
     const serialId = req.user.serialId;
     const newDes = req.body.des;
