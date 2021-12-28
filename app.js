@@ -3,32 +3,14 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const bcryptjs = require("bcryptjs");
 const session = require("express-session");
 const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const mongoose = require("mongoose");
 const path = require("path");
+const User = require("./mongodb/mongodb");
 // ------------------ DATABASE ------------------ //
 const atlasurl = "mongodb+srv://" + process.env.DB_ID + ":" + process.env.DB_PASS + "@cluster0.wt1i5.mongodb.net/postitDB";
 mongoose.connect(atlasurl); // mongoose.connect("mongodb://localhost:27017/postitDB");
-const postSchema = mongoose.Schema({
-    item: String,
-    des: String,
-    date: Number
-});
-const userSchema = mongoose.Schema({
-    googleId: String,
-    username: String,
-    password: String,
-    serialId: String,
-    name: String,
-    joinDate: Number,
-    posts: [postSchema],
-    archives: [postSchema]
-})
-const User = mongoose.model("User", userSchema);
 // ------------------ MIDDLEWARE ------------------ //
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
@@ -42,116 +24,11 @@ app.use(session({
 }))
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new LocalStrategy(
-    async function(username, password, done) {
-        const user = await User.findOne({ username: username });
-        if (!user) {
-            return done(null, false);
-        } else if (await bcryptjs.compare(password, user.password)) {
-            return done(null, user);
-        } else {
-            return done(null, false); 
-        }
-
-    }
-  ));
-passport.use( new GoogleStrategy({
-    clientID: process.env.TEST_ID,
-    clientSecret: process.env.TEST_SECRET,
-    callbackURL: "http://localhost:4000/api/auth/callback"
-},
-    async function(accessToken, refreshToken, profile, cb) {
-        const user = await User.findOne({googleId:profile.id});
-        if (!user) {
-            const userObject = {
-                googleId: profile.id,
-                serialId: "google" + profile.id,
-                name: profile.displayName,
-                joinDate: new Date().getTime(),
-                posts: [{ item: "โพสต์แรกของฉัน", des: "ดูแลสุขภาพด้วยครับ", date: new Date().getTime()}],
-                archives: [{ item: "โพสต์ที่ถูกบันทึก", des: "โพสต์ที่ถูกบันทึกจะไม่แสดงในหน้าหลักของแอปโพสต์อิท", date: new Date().getTime()}]
-            }
-            
-            const createUser = new User(userObject);
-            createUser.save((err) => {
-                if (err) {console.log(err)}
-                else {
-                    return cb(null,userObject);
-                }
-            });
-        } else if (user) {
-            return cb(null, user)
-        }
-    }
-))
-passport.serializeUser((user,done) => done(null, user.serialId));
-passport.deserializeUser( async(serialId,done) => {
-    const user = await User.findOne({serialId:serialId});
-    return done(null, user);
-})
+require("./passport-config/passport-config")(passport);
 
 // ------------------ ROUTES ------------------ //
-app.post("/api/register", async(req,res) => {
-    if (!req.body.username || !req.body.password) {
-        res.status(400).send("Both username and password are required.");
-        return;
-    }
-    const username = req.body.username;
-    const password = await bcryptjs.hash(req.body.password,10);
-    const findUsername = await User.findOne({username:username});
-    if (findUsername) {
-        res.status(403).send("The username is already used.");
-    } else {
-        const createUser = new User({
-            username: username,
-            serialId: "local" + username,
-            password: password,
-            joinDate: new Date().getTime(),
-            posts: [{ item: "โพสต์แรกของฉัน", des: "ดูแลสุขภาพด้วยครับ", date: new Date().getTime()}],
-            archives: [{ item: "โพสต์ที่ถูกบันทึก", des: "โพสต์ที่ถูกบันทึกจะไม่แสดงในหน้าหลักของแอปโพสต์อิท", date: new Date().getTime()}]
-        })
-        createUser.save((err) => {
-            if (err) {console.log(err)}
-            else {res.status(200).send("registered successfully")}
-        })
-    }
-})
+require("./auth-routes/auth-routes")(app, passport);
 
-app.post("/api/login",
-    blockAuthenticated,
-    passport.authenticate("local", {failureRedirect: "/api/failureAuth"}), (req,res) => {
-    res.status(200).send("Successfully Authenticated.");
-});
-
-app.get("/api/user", (req, res) => {
-    if (req.isAuthenticated()) {
-        res.sendStatus(200)
-    } else {
-        res.sendStatus(403);
-    }
-  });
-
-app.get("/api/logout", blockNotAuthenticated, (req,res) => { // (GET ONLY FOR FOR TESTING )
-    req.logout();
-    res.status(200).send("logged out successfully");
-})
-
-app.post("/api/logout", blockNotAuthenticated, (req,res) => {
-    req.logout();
-    res.status(200).send("logged out successfully");
-})
-
-app.get("/api/auth/google", blockAuthenticated, passport.authenticate("google", { scope: ["profile"] }));
-
-app.get("/api/auth/callback", passport.authenticate("google", { failureRedirect: "/authentication"}), (req,res) => {
-    res.redirect("/");
-});
-
-app.get("/api/failureAuth", (req,res) => {
-    res.status(401).send("authentication failed.")
-})
-
-// CRUD REST
 app.get("/api/posts", blockNotAuthenticated, (req,res) => {
     res.status(200).json(req.user.posts);
 });
