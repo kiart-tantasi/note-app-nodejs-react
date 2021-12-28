@@ -38,7 +38,7 @@ module.exports = function(app, passport) {
         if (req.isAuthenticated()) {
             res.sendStatus(200)
         } else {
-            res.sendStatus(403);
+            res.sendStatus(404);
         }
       });
     
