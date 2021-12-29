@@ -73,11 +73,13 @@ app.delete("/api/posts/:itemId", blockNotAuthenticated, (req,res) => {
 app.patch("/api/posts/:itemId", blockNotAuthenticated, (req,res) => {
     const itemId = req.params.itemId;
     const serialId = req.user.serialId;
+    const newTitle = req.body.item;
+    console.log(newTitle);
     const newDes = req.body.des;
     User.updateOne(
         {serialId: serialId,
         "posts._id": itemId},
-        { $set: {"posts.$.des":newDes}},
+        { $set: {"posts.$.item":newTitle, "posts.$.des":newDes}},
         (err) => {
             if (err) {console.log(err)}
             else {
