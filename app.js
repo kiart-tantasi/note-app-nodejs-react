@@ -38,7 +38,7 @@ app.post("/api/posts", blockNotAuthenticated, (req,res) => {
     const item = req.body.item;
     const des = req.body.des;
     if (!item) {
-        res.status(400).send("The title fill is required.");
+        res.status(400).send("The title field is required.");
         return;
     }
     const date = new Date().getTime();
@@ -74,8 +74,11 @@ app.patch("/api/posts/:itemId", blockNotAuthenticated, (req,res) => {
     const itemId = req.params.itemId;
     const serialId = req.user.serialId;
     const newTitle = req.body.item;
-    console.log(newTitle);
     const newDes = req.body.des;
+    if (!newTitle) {
+        res.status(400).send("The title field is required.");
+        return;
+    }
     User.updateOne(
         {serialId: serialId,
         "posts._id": itemId},
