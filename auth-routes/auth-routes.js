@@ -36,7 +36,7 @@ module.exports = function(app, passport) {
     
     app.get("/api/user", (req, res) => {
         if (req.isAuthenticated()) {
-            res.sendStatus(200)
+            res.status(200).json(req.user);
         } else {
             res.sendStatus(404);
         }
