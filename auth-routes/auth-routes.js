@@ -36,7 +36,17 @@ module.exports = function(app, passport) {
     
     app.get("/api/user", (req, res) => {
         if (req.isAuthenticated()) {
-            res.status(200).json(req.user);
+            let userName;
+            if (req.user.username) {
+                userName = req.user.username;
+            } else if (req.user.name) {
+                userName = req.user.name;
+            }
+            const result = {
+                userName: userName,
+                posts: req.user.posts
+            }
+            res.status(200).json(result);
         } else {
             res.sendStatus(404);
         }
