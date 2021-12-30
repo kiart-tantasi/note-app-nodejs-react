@@ -36,7 +36,7 @@ module.exports = function(app, passport) {
     
     app.get("/api/user", (req, res) => {
         if (req.isAuthenticated()) {
-            res.sendStatus(200)
+            res.status(200).json(req.user);
         } else {
             res.sendStatus(404);
         }
@@ -52,7 +52,7 @@ module.exports = function(app, passport) {
         res.status(200).send("logged out successfully");
     })
     
-    app.get("/api/auth/google", blockAuthenticated, passport.authenticate("google", { scope: ["profile"] }));
+    app.get("/api/auth/google", passport.authenticate("google", { scope: ["profile"] }));
     
     app.get("/api/auth/callback", passport.authenticate("google", { failureRedirect: "/authentication"}), (req,res) => {
         res.redirect("/");
