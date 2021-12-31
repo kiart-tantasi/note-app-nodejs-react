@@ -93,23 +93,32 @@ app.patch("/api/posts/:itemId", blockNotAuthenticated, (req,res) => {
     )
 })
 
+app.get("/getAdmin", function(req,res) {
+    User.findOne({username:"admin"}, (err,result) => {
+        if (!err) {
+            res.json(result);
+        }
+    })
+})
+
 // EVERY OTHERS' AND REACT'S ROUTES
 app.get("/*", function(req,res) {
     res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 //Test Code//
 
-//Find
-// User.findOne({username:"admin"}, (err,result) => {
-//     const categories = result.categories;
-//     console.log("Name of Categories:");
-//     categories.map(x => console.log(x.name));
-//     const animals = result.categories.find(x => x.name === "Animals");
-//     console.log("NAME:", animals.name);
-//     console.log("POSTS:", animals.posts);
-// })
+// Find
+User.findOne({username:"admin"}, (err,result) => {
+    const categories = result.categories;
+    console.log("Name of Categories:");
+    categories.map(x => console.log(x.name));
+    // const animals = result.categories.find(x => x.name === "Animals");
+    // console.log("NAME:", animals.name);
+    // console.log("POSTS:", animals.posts);
+})
 
-//Add a Category
+//Create a Category
+
 // User.findOne({username:"admin"}, (err,result) => {
 //     result.categories.push({
 //         name:"Money",
@@ -126,11 +135,26 @@ app.get("/*", function(req,res) {
 //     });
 // })
 
-// Add an item into a category
+
+//Remove a category
+
+// User.updateOne(
+//     {"username":"admin"},
+//     {$pull:{categories:{name:"Animals"}}},
+//     (err) => {
+//         if (err) {console.log(err)}
+//         else {
+//             console.log("Removed a category")
+//         }
+//     }
+// )
+
+
+// Add a Note into a category
+
 // User.findOne({username:"admin"}, (err,result) => {
 //     const category = result.categories.find(x => x.name === "Animals");
-//     category.posts.push({item:"rabbit",des:"pink animal", date: new Date().getTime(), invalid:"yes it is invalid!"});
-//     category.posts.push({des:"only description"});
+//     category.posts.push({item:"delete me",des:"please", date: new Date().getTime()});
 //     result.save( err => {
 //         if (err) {console.log(err)}
 //         else {
@@ -139,18 +163,22 @@ app.get("/*", function(req,res) {
 //     });
 // })
 
-// remove an item from a category 
-// User.findOne({username:"admin"}, (err,result) => {
-//     const category = result.categories.find(x => x.name === "Animals");
-//     const arr = [...category.posts].filter(x => x.des !== "only description");
-//     category.posts = arr;
-//     result.save( err => {
+// Remove a note from a category
+
+// User.updateOne(
+//     {username:"admin",
+//     "categories.name":"Animals"},
+//     {$pull: {"categories.$.posts":{"item":"delete me"}}},
+//     err => {
 //         if (err) {console.log(err)}
 //         else {
-//             console.log("one item in a category deleted");
+//             console.log("deleted successfully");
 //         }
-//     });
-// })
+//     }
+// )
+
+// Move a note into another category
+// Add the note into the new category + Delete the note from the old category
 
 
 //---------//
