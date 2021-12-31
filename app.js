@@ -97,6 +97,63 @@ app.patch("/api/posts/:itemId", blockNotAuthenticated, (req,res) => {
 app.get("/*", function(req,res) {
     res.sendFile(path.join(__dirname, "build", "index.html"));
 });
+//Test Code//
+
+//Find
+// User.findOne({username:"admin"}, (err,result) => {
+//     const categories = result.categories;
+//     console.log("Name of Categories:");
+//     categories.map(x => console.log(x.name));
+//     const animals = result.categories.find(x => x.name === "Animals");
+//     console.log("NAME:", animals.name);
+//     console.log("POSTS:", animals.posts);
+// })
+
+//Add a Category
+// User.findOne({username:"admin"}, (err,result) => {
+//     result.categories.push({
+//         name:"Money",
+//         posts: [
+//             {item:"U.S. Dollar",des:"USA",date: new Date().getTime()},
+//             {item:"Thai baht",des:"Thailand",date: new Date().getTime()}
+//         ]
+//     })
+//     result.save( err => {
+//         if (err) {console.log(err)}
+//         else {
+//             console.log("new category saved.")
+//         }
+//     });
+// })
+
+// Add an item into a category
+// User.findOne({username:"admin"}, (err,result) => {
+//     const category = result.categories.find(x => x.name === "Animals");
+//     category.posts.push({item:"rabbit",des:"pink animal", date: new Date().getTime(), invalid:"yes it is invalid!"});
+//     category.posts.push({des:"only description"});
+//     result.save( err => {
+//         if (err) {console.log(err)}
+//         else {
+//             console.log("added into a category");
+//         }
+//     });
+// })
+
+// remove an item from a category 
+// User.findOne({username:"admin"}, (err,result) => {
+//     const category = result.categories.find(x => x.name === "Animals");
+//     const arr = [...category.posts].filter(x => x.des !== "only description");
+//     category.posts = arr;
+//     result.save( err => {
+//         if (err) {console.log(err)}
+//         else {
+//             console.log("one item in a category deleted");
+//         }
+//     });
+// })
+
+
+//---------//
 
 // BLOCK PEOPLE WITH NO AUTHENTICATION AND PEOPLE WHO ALREADY LOGGED IN
 function blockNotAuthenticated(req,res,next) {

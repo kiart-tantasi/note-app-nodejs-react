@@ -5,6 +5,12 @@ const postSchema = mongoose.Schema({
     des: String,
     date: Number
 });
+
+const categorySchema = mongoose.Schema({
+    name: String,
+    posts: [postSchema]
+});
+
 const userSchema = mongoose.Schema({
     googleId: String,
     username: String,
@@ -13,7 +19,8 @@ const userSchema = mongoose.Schema({
     name: String,
     joinDate: Number,
     posts: [postSchema],
-    archives: [postSchema]
-})
+    archives: [postSchema],
+    categories: [categorySchema]
+});
 
 module.exports = mongoose.model("User", userSchema);
