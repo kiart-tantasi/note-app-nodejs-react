@@ -10,7 +10,8 @@ const path = require("path");
 const User = require("./mongodb/mongodb");
 // ------------------ DATABASE ------------------ //
 const atlasurl = "mongodb+srv://" + process.env.DB_ID + ":" + process.env.DB_PASS + "@cluster0.wt1i5.mongodb.net/postitDB";
-mongoose.connect(atlasurl); // mongoose.connect("mongodb://localhost:27017/postitDB");
+// mongoose.connect(atlasurl); 
+mongoose.connect("mongodb://localhost:27017/postitDB");
 // ------------------ MIDDLEWARE ------------------ //
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());

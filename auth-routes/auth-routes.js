@@ -64,8 +64,8 @@ module.exports = function(app, passport) {
     
     app.get("/api/auth/google", passport.authenticate("google", { scope: ["profile"] }));
     
-    app.get("/api/auth/callback", passport.authenticate("google", { failureRedirect: "/authentication"}), (req,res) => {
-        res.redirect("/");
+    app.get("/api/auth/callback", passport.authenticate("google", { failureRedirect: "http://localhost:3000/authentication"}), (req,res) => {
+        res.redirect("http://localhost:3000/authentication");
     });
     
     app.get("/api/failureAuth", (req,res) => {
