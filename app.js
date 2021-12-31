@@ -7,11 +7,11 @@ const session = require("express-session");
 const passport = require("passport");
 const mongoose = require("mongoose");
 const path = require("path");
-const User = require("./mongodb/mongodb");
 // ------------------ DATABASE ------------------ //
-const atlasurl = "mongodb+srv://" + process.env.DB_ID + ":" + process.env.DB_PASS + "@cluster0.wt1i5.mongodb.net/postitDB";
+// const atlasurl = "mongodb+srv://" + process.env.DB_ID + ":" + process.env.DB_PASS + "@cluster0.wt1i5.mongodb.net/postitDB";
 // mongoose.connect(atlasurl); 
 mongoose.connect("mongodb://localhost:27017/postitDB");
+const User = require("./mongodb/mongodb");
 // ------------------ MIDDLEWARE ------------------ //
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
@@ -179,6 +179,11 @@ User.findOne({username:"admin"}, (err,result) => {
 
 // Move a note into another category
 // Add the note into the new category + Delete the note from the old category
+
+// Archives
+// 1. Add into archives and delete from main posts 
+// 2. Add into archives and delete from the category
+//Icon to open Archrives
 
 
 //---------//
