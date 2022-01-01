@@ -7,10 +7,11 @@ const session = require("express-session");
 const passport = require("passport");
 const mongoose = require("mongoose");
 const path = require("path");
-const User = require("./mongodb/mongodb");
 // ------------------ DATABASE ------------------ //
-const atlasurl = "mongodb+srv://" + process.env.DB_ID + ":" + process.env.DB_PASS + "@cluster0.wt1i5.mongodb.net/postitDB";
-mongoose.connect(atlasurl); // mongoose.connect("mongodb://localhost:27017/postitDB");
+// const atlasurl = "mongodb+srv://" + process.env.DB_ID + ":" + process.env.DB_PASS + "@cluster0.wt1i5.mongodb.net/postitDB";
+// mongoose.connect(atlasurl); 
+mongoose.connect("mongodb://localhost:27017/postitDB");
+const User = require("./mongodb/mongodb");
 // ------------------ MIDDLEWARE ------------------ //
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
@@ -92,10 +93,100 @@ app.patch("/api/posts/:itemId", blockNotAuthenticated, (req,res) => {
     )
 })
 
+app.get("/getAdmin", function(req,res) {
+    User.findOne({username:"admin"}, (err,result) => {
+        if (!err) {
+            res.json(result);
+        }
+    })
+})
+
 // EVERY OTHERS' AND REACT'S ROUTES
 app.get("/*", function(req,res) {
     res.sendFile(path.join(__dirname, "build", "index.html"));
 });
+//Test Code//
+
+// Find
+// User.findOne({username:"admin"}, (err,result) => {
+//     const categories = result.categories;
+//     console.log("Name of Categories:");
+//     categories.map(x => console.log(x.name));
+    // const animals = result.categories.find(x => x.name === "Animals");
+    // console.log("NAME:", animals.name);
+    // console.log("POSTS:", animals.posts);
+// })
+
+//Create a Category
+
+// User.findOne({username:"admin"}, (err,result) => {
+//     result.categories.push({
+//         name:"Money",
+//         posts: [
+//             {item:"U.S. Dollar",des:"USA",date: new Date().getTime()},
+//             {item:"Thai baht",des:"Thailand",date: new Date().getTime()}
+//         ]
+//     })
+//     result.save( err => {
+//         if (err) {console.log(err)}
+//         else {
+//             console.log("new category saved.")
+//         }
+//     });
+// })
+
+
+//Remove a category
+
+// User.updateOne(
+//     {"username":"admin"},
+//     {$pull:{categories:{name:"Animals"}}},
+//     (err) => {
+//         if (err) {console.log(err)}
+//         else {
+//             console.log("Removed a category")
+//         }
+//     }
+// )
+
+
+// Add a Note into a category
+
+// User.findOne({username:"admin"}, (err,result) => {
+//     const category = result.categories.find(x => x.name === "Animals");
+//     category.posts.push({item:"delete me",des:"please", date: new Date().getTime()});
+//     result.save( err => {
+//         if (err) {console.log(err)}
+//         else {
+//             console.log("added into a category");
+//         }
+//     });
+// })
+
+// Remove a note from a category
+
+// User.updateOne(
+//     {username:"admin",
+//     "categories.name":"Animals"},
+//     {$pull: {"categories.$.posts":{"item":"delete me"}}},
+//     err => {
+//         if (err) {console.log(err)}
+//         else {
+//             console.log("deleted successfully");
+//         }
+//     }
+// )
+
+// Move a note into another category
+// Add the note into the new category + Delete the note from the old category
+
+// Archives
+// 1. Add into archives and delete from main posts 
+// 2. Add into archives and delete from the category
+//Icon to open Archrives
+
+
+//---------//
 
 // BLOCK PEOPLE WITH NO AUTHENTICATION AND PEOPLE WHO ALREADY LOGGED IN
 function blockNotAuthenticated(req,res,next) {

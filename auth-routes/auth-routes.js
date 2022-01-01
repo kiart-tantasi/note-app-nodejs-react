@@ -18,7 +18,7 @@ module.exports = function(app, passport) {
                 serialId: "local" + username,
                 password: password,
                 joinDate: new Date().getTime(),
-                posts: [{ item: "โพสต์แรกของฉัน", des: "ดูแลสุขภาพด้วยครับ", date: new Date().getTime()}],
+                posts: [{ item: "โพสต์แรกของฉัน", des: "โพสต์อิท!", date: new Date().getTime()}],
                 archives: [{ item: "โพสต์ที่ถูกบันทึก", des: "โพสต์ที่ถูกบันทึกจะไม่แสดงในหน้าหลักของแอปโพสต์อิท", date: new Date().getTime()}]
             })
             createUser.save((err) => {
@@ -64,8 +64,8 @@ module.exports = function(app, passport) {
     
     app.get("/api/auth/google", passport.authenticate("google", { scope: ["profile"] }));
     
-    app.get("/api/auth/callback", passport.authenticate("google", { failureRedirect: "/authentication"}), (req,res) => {
-        res.redirect("/");
+    app.get("/api/auth/callback", passport.authenticate("google", { failureRedirect: "http://localhost:3000/authentication"}), (req,res) => {
+        res.redirect("http://localhost:3000/authentication");
     });
     
     app.get("/api/failureAuth", (req,res) => {

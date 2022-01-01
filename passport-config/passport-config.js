@@ -33,7 +33,7 @@ module.exports = function(passport) {
                     serialId: "google" + profile.id,
                     name: profile.displayName,
                     joinDate: new Date().getTime(),
-                    posts: [{ item: "โพสต์แรกของฉัน", des: "ดูแลสุขภาพด้วยครับ", date: new Date().getTime()}],
+                    posts: [{ item: "โพสต์แรกของฉัน", des: "โพสต์อิท!", date: new Date().getTime()}],
                     archives: [{ item: "โพสต์ที่ถูกบันทึก", des: "โพสต์ที่ถูกบันทึกจะไม่แสดงในหน้าหลักของแอปโพสต์อิท", date: new Date().getTime()}]
                 }
                 const createUser = new User(userObject);
