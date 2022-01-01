@@ -8,9 +8,9 @@ const passport = require("passport");
 const mongoose = require("mongoose");
 const path = require("path");
 // ------------------ DATABASE ------------------ //
-// const atlasurl = "mongodb+srv://" + process.env.DB_ID + ":" + process.env.DB_PASS + "@cluster0.wt1i5.mongodb.net/postitDB";
-// mongoose.connect(atlasurl); 
-mongoose.connect("mongodb://localhost:27017/postitDB");
+const atlasurl = "mongodb+srv://" + process.env.DB_ID + ":" + process.env.DB_PASS + "@cluster0.wt1i5.mongodb.net/postitDB";
+mongoose.connect(atlasurl); 
+// mongoose.connect("mongodb://localhost:27017/postitDB");
 const User = require("./mongodb/mongodb");
 // ------------------ MIDDLEWARE ------------------ //
 app.use(express.urlencoded({extended:false}));
