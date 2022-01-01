@@ -108,14 +108,14 @@ app.get("/*", function(req,res) {
 //Test Code//
 
 // Find
-User.findOne({username:"admin"}, (err,result) => {
-    const categories = result.categories;
-    console.log("Name of Categories:");
-    categories.map(x => console.log(x.name));
+// User.findOne({username:"admin"}, (err,result) => {
+//     const categories = result.categories;
+//     console.log("Name of Categories:");
+//     categories.map(x => console.log(x.name));
     // const animals = result.categories.find(x => x.name === "Animals");
     // console.log("NAME:", animals.name);
     // console.log("POSTS:", animals.posts);
-})
+// })
 
 //Create a Category
 
