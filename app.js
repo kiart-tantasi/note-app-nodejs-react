@@ -38,12 +38,16 @@ app.post("/api/posts", blockNotAuthenticated, (req,res) => {
     const serialId = req.user.serialId;
     const item = req.body.item;
     const des = req.body.des;
-    if (!item) {
-        res.status(400).send("The title field is required.");
+    if (!item && !des) {
+        res.status(400).send("No information received");
         return;
     }
     const date = new Date().getTime();
     User.findOne({serialId:serialId},(err,result) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
         result.posts.push({item:item,des:des,date:date});
         const id = result.posts[result.posts.length-1]._id;
         result.save((err) => {
@@ -76,8 +80,8 @@ app.patch("/api/posts/:itemId", blockNotAuthenticated, (req,res) => {
     const serialId = req.user.serialId;
     const newTitle = req.body.item;
     const newDes = req.body.des;
-    if (!newTitle) {
-        res.status(400).send("The title field is required.");
+    if (!newTitle && !newDes) {
+        res.status(400).send("No information received");
         return;
     }
     User.updateOne(
