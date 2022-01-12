@@ -19,16 +19,16 @@ app.use(express.static(path.join(__dirname, "build")));
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(session({
     secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {maxAge: 7*24*60*60*1000} 
+    resave: true,
+    saveUninitialized: true,
+    cookie: {maxAge: 14*24*60*60*1000} 
 }))
 app.use(passport.initialize());
 app.use(passport.session());
-require("./passport-config/passport-config")(passport);
-
+require("./passport-config/passport-config")(passport); //Config Passport
 // ------------------ ROUTES ------------------ //
-require("./auth-routes/auth-routes")(app, passport);
+
+require("./auth-routes/auth-routes")(app, passport); //Auth Routes
 
 app.get("/api/posts", blockNotAuthenticated, (req,res) => {
     res.status(200).json(req.user.posts);
@@ -97,13 +97,13 @@ app.patch("/api/posts/:itemId", blockNotAuthenticated, (req,res) => {
     )
 })
 
-app.get("/getAdmin", function(req,res) {
-    User.findOne({username:"admin"}, (err,result) => {
-        if (!err) {
-            res.json(result);
-        }
-    })
-})
+// app.get("/getAdmin", function(req,res) {
+//     User.findOne({username:"admin"}, (err,result) => {
+//         if (!err) {
+//             res.json(result);
+//         }
+//     })
+// })
 
 // EVERY OTHERS' AND REACT'S ROUTES
 app.get("/*", function(req,res) {
@@ -207,5 +207,6 @@ function blockAuthenticated(req,res,next) {
         res.status(403).send("already logged in");
     }
 }
+
 const port = process.env.PORT || 4000;
 app.listen(port, () => console.log("running on", port));
