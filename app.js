@@ -9,8 +9,8 @@ const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
 const path = require("path");
 // ------------------ DATABASE ------------------ //
-const atlasurl = "mongodb+srv://" + process.env.DB_ID + ":" + process.env.DB_PASS + "@cluster0.wt1i5.mongodb.net";
-mongoose.connect( atlasurl + "/postitDB" ); 
+const atlasurl = "mongodb+srv://" + process.env.DB_ID + ":" + process.env.DB_PASS + "@cluster0.wt1i5.mongodb.net/postitDB";
+mongoose.connect( atlasurl ); 
 // mongoose.connect("mongodb://localhost:27017/postitDB");
 const User = require("./mongodb/mongodb");
 // ------------------ MIDDLEWARE ------------------ //
@@ -22,7 +22,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: atlasurl + "/sessionDB" }),
+    store: MongoStore.create({ mongoUrl: atlasurl }),
     cookie: {maxAge: 14*24*60*60*1000} 
 }))
 app.use(passport.initialize());
