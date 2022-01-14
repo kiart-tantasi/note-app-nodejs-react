@@ -6,6 +6,7 @@ const cors = require("cors");
 const session = require("express-session");
 const passport = require("passport");
 const mongoose = require("mongoose");
+const MongoStore = require("connect-mongo");
 const path = require("path");
 // ------------------ DATABASE ------------------ //
 // const atlasurl = "mongodb+srv://" + process.env.DB_ID + ":" + process.env.DB_PASS + "@cluster0.wt1i5.mongodb.net/postitDB";
@@ -19,8 +20,9 @@ app.use(express.static(path.join(__dirname, "build")));
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(session({
     secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
+    store: MongoStore.create({ mongoUrl: "mongodb://localhost:27017/sessionDB" }),
     cookie: {maxAge: 7*24*60*60*1000} 
 }))
 app.use(passport.initialize());
