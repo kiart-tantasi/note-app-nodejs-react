@@ -17,7 +17,7 @@ const User = require("./mongodb/mongodb");
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "build")));
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cors({ origin: "http://localhost:3000", credentials: true })); //for using from local computer /**not for this hosting react app
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: true,
