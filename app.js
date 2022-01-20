@@ -22,7 +22,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: "mongodb://localhost:27017/sessionDB" }),
+    store: MongoStore.create({ mongoUrl: "mongodb://localhost:27017/postitDB" }),
     cookie: {maxAge: 7*24*60*60*1000} 
 }))
 app.use(passport.initialize());
