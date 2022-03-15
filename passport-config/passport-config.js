@@ -23,7 +23,7 @@ module.exports = function(passport) {
     passport.use( new GoogleStrategy({
         clientID: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET,
-        callbackURL: "https://post-it-app-by-me.herokuapp.com/api/auth/callback"
+        callbackURL: process.env.CALLBACK_URL
     },
         async function(accessToken, refreshToken, profile, cb) {
             const user = await User.findOne({googleId:profile.id});

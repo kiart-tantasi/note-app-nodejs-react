@@ -106,3 +106,5 @@ dist
 deletePost.js
 client
 thingstochange
+
+app.env
