@@ -9,9 +9,8 @@ const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
 const path = require("path");
 // ------------------ DATABASE ------------------ //
-const dbUrl = process.env.DB_URL + process.env.DB_NAME;
-console.log(dbUrl);
-mongoose.connect( dbUrl ); 
+const dbUrl = process.env.FULL_DB_URL;
+mongoose.connect(dbUrl); 
 const User = require("./mongodb/mongodb");
 // ------------------ MIDDLEWARE ------------------ //
 app.use(express.urlencoded({extended:false}));
