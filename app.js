@@ -2,21 +2,20 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-const cors = require("cors");
+// const cors = require("cors");
 const session = require("express-session");
 const passport = require("passport");
 const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
 const path = require("path");
 // ------------------ DATABASE ------------------ //
-const dbUrl = process.env.FULL_DB_URL;
-mongoose.connect(dbUrl); 
+const dbUrl = process.env.DB_URL + process.env.DB_NAME;
+mongoose.connect(dbUrl);
 const User = require("./mongodb/mongodb");
 // ------------------ MIDDLEWARE ------------------ //
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "build")));
-app.use(cors({ origin: "http://localhost:3000", credentials: true })); //for using from local computer /**not for this hosting react app
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: true,
