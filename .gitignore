@@ -108,3 +108,6 @@ client
 thingstochange
 
 app.env
+
+# kube
+deployment.yaml
