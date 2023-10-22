@@ -38,16 +38,17 @@ Cannot use Google OAuth in development environment
 
 This project contains both frontend (SPA React) and backend(Nodejs) together in one image
 
+
+## Https
+To use https, you need to put certificate.pem and private_key.pem in `./certificates/`.
+If you do not need to use, please remove nginx steps in Dockerfile
+
 Build image
 ```
-docker build -t name .
+docker build -t app .
 ```
 
 Run
 ```
-docker run -p 4000:4000 name
+docker run -p 443:443 app
 ```
-
-# Todo
-
-- Install Nginx and use certs
