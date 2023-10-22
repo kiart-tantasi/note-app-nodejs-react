@@ -20,7 +20,7 @@ Please look at **Google Cloud Console, APIs and Services, Credentials**
 ## frontned
 ```
 cd frontend
-npm start
+npm start # You need to use Nodejs version 16.15
 ```
 Running at http://localhost:3000
 
@@ -50,5 +50,5 @@ docker build -t app .
 
 Run
 ```
-docker run -p 443:443 app
+docker run -p 443:443 -p 80:80 app
 ```
