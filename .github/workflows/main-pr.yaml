@@ -9,7 +9,7 @@ jobs:
       - name: Git Checkout
         uses: actions/checkout@v3
       - name: Current DIR
-        uses: pwd && ls -a
+        run: pwd && ls -a
       - name: Create fake cerificates
         run: echo 'abcdef' >> ./certificates/certificate.pem && echo 'abcdef' >> ./certificates/private_key.pem
       - name: Build docker image
