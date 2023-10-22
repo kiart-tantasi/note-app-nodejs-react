@@ -8,9 +8,7 @@ jobs:
     steps:
       - name: Git Checkout
         uses: actions/checkout@v3
-      - name: Current DIR
-        run: pwd && ls -a
       - name: Create fake cerificates
-        run: echo 'abcdef' >> ./certificates/certificate.pem && echo 'abcdef' >> ./certificates/private_key.pem
+        run: mkdir certificates && echo 'fake' >> ./certificates/certificate.pem && echo 'fake' >> ./certificates/private_key.pem
       - name: Build docker image
         run: docker build -t app .
