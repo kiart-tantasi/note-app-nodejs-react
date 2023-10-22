@@ -9,7 +9,7 @@ const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
 const path = require("path");
 // ------------------ DATABASE ------------------ //
-const dbUrl = process.env.DB_URL + process.env.DB_NAME;
+const dbUrl = process.env.DB_URL;
 mongoose.connect(dbUrl);
 const User = require("./mongodb/mongodb");
 // ------------------ MIDDLEWARE ------------------ //
@@ -29,6 +29,10 @@ require("./passport-config/passport-config")(passport); //Config Passport
 // ------------------ ROUTES ------------------ //
 
 require("./auth-routes/auth-routes")(app, passport); //Auth Routes
+
+app.get("/healthz", (_, res) => {
+	return res.sendStatus(200);
+});
 
 app.get("/api/posts", blockNotAuthenticated, (req,res) => {
     res.status(200).json(req.user.posts);
