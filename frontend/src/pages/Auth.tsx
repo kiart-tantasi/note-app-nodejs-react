@@ -196,27 +196,13 @@ export default function Auth(props:{onRefreshData: () => void}) {
         
                     <br/><br/>
 
-                    {/* GOOGLE AUTH BUTTON */}
-
-                    {/* <button
-                        type="button"
-                        className={styles.googleAuth}>
-                        <a 
-                        className={styles.googleA} 
-                        href="/api/auth/google">
-                            เข้าสู่ระบบ/สมัครด้วย GOOGLE ACCOUNT
-                        </a>
-                    </button> */}
-
-                    {/* WHEN TESTING, USE BELOW (localhost 4000) */}
-
                     <button
                         type="button"
                         className={styles.googleAuth}>
                         <a
                         className={styles.googleA}
-                        href="http://localhost:4000/api/auth/google">
-                            เข้าสู่ระบบ/สมัครโดย GOOGLE (TESTING)
+                        href={`${process.env.REACT_APP_API_DOMAIN}/api/auth/google`}>
+                            เข้าสู่ระบบ/สมัครโดย GOOGLE
                         </a>
                     </button>
 

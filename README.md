@@ -1,5 +1,11 @@
 # Environment Variables
 
+## Frontend
+`.env.development` or `.env.production`
+```
+REACT_APP_API_DOMAIN=<API-DOMAIN>
+```
+
 ## Backend
 Create file `.env.local` in `./backend/`
 ```
