@@ -1,0 +1,128 @@
+/* For no title and with title notes */
+.noTitle {
+    max-height: 150px;
+  }
+  .withTitle {
+    max-height: 125px;
+  }
+  /* ---------------------------*/
+  
+  .Item-block {
+    background-color: #fff;
+    display: inline-block;
+    margin: 10px 10px 6px;
+    padding: 15px 12.5px 5px;
+    border-radius: 7.5px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.308);
+    width: 280px;
+    height: 220px;
+  }
+  
+  .Item-block h3 {
+    font-size: 20px;
+    max-height: 40px;
+    overflow: hidden;
+    text-align: center;
+  }
+  
+  .description-text {
+    font-size: 1.1rem;
+    word-wrap: break-word;
+    margin: 0;
+    padding-top: 4px;
+    letter-spacing: 1px;
+    line-height: 150%;
+    overflow: hidden;
+  }
+  
+  .item-block-footer {
+    text-align: right;
+  }
+  
+  .date-text {
+    font-size: 11px;
+    position: relative;
+    top: 30%;
+  }
+  
+  .footer-buttons button {
+    background-color: #fff;
+    border: rgb(247, 247, 247);
+    margin-top: 2.5px;
+    margin-left: 15px;
+    color: rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+  }
+  
+  .footer-buttons a {
+    text-decoration: none;
+  }
+  
+  .footer-buttons button {
+    padding: 3px 5px;
+  }
+
+  .footer-buttons button:first-child {
+    margin-left: 0;
+  }
+  
+  .edit-link {
+    display: inline-block;
+    color:rgba(0, 0, 0, 0.7);
+  }
+
+  .spinner-ui {
+    color:rgba(0, 0, 0, 0.5);
+  }
+  
+  /* FLEX SYSTEM IN A NOTE */
+  .item-block-flex-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .item-block-flex-footer {
+    flex-grow: 0;
+  }
+  
+  .item-block-flex-body {
+    flex-grow: 1;
+    padding-top: 4px;
+  }
+  
+  /* FLEX SYSTEM FOR NOTE'S FOOTER */
+  .item-block-footer {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .footer-date {
+    flex-grow: 0;
+  }
+  
+  .footer-buttons {
+    flex-grow: 1;
+  }
+  
+  /* Media Query */
+  
+  @media (max-width: 670px) {
+      .Item-block {
+          width: 100%;
+          margin: 10px auto;
+      }
+  }
+  
+  /* HOVER ONLY ON 949PX + */
+  
+  @media (min-width: 950px) {
+    .Item-block h3:hover {
+        color:rgba(0, 0, 0, 0.8)
+    }
+    .footer-buttons button:hover {
+        color: rgba(0, 0, 0);
+        border-radius: 5px;
+        background-color: rgb(236, 236, 236);
+    }
+  }  

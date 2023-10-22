@@ -1,0 +1,62 @@
+.main-nav {
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  background-color: rgb(43, 43, 43);
+  padding: 12.5px;
+  border-bottom: 1px solid rgb(43, 43, 43);
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.514);
+  z-index: 999;
+}
+
+.route {
+  font-size: 1.1rem;
+}
+
+.route-active {
+  font-size: 1.4rem;
+}
+
+.route,
+.route-active {
+  display: inline-block;
+  text-decoration: none;
+  color: #fff;
+  padding: 2.5px 25px;
+}
+
+.route:first-child,
+.route-active:first-child {
+  padding: 2.5px 15px;
+}
+
+/* Media Query */
+
+@media (max-width: 950px) {
+    .main-nav {
+        padding: 10px 0;
+    }
+}
+
+@media (max-width: 400px) {
+    .main-nav {
+        width: 100%;
+    }
+
+    .route,
+    .route-active {
+        padding: 2.5px 20px;
+    }
+
+    .route:first-child, .route-active:first-child {
+        padding: 2.5px 10px;
+    }
+}
+
+/* HOVER ONLY ON 949PX + */
+@media (min-width: 950px) {
+    .route:hover, .route-active:hover {
+        border-radius: 10px;
+        background-color: rgba(0, 0, 0, 0.3)
+    }
+}
