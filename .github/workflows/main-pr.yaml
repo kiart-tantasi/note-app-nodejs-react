@@ -8,5 +8,7 @@ jobs:
     steps:
       - name: Git Checkout
         uses: actions/checkout@v3
+      - name: Create fake cerificates
+        run: echo 'abcdef' >> ./certificates/certificate.pem && echo 'abcdef' >> ./certificates/private_key.pem
       - name: Build docker image
         run: docker build -t app .
