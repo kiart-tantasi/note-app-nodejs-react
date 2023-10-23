@@ -1,0 +1,44 @@
+.modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0,0.5);
+    padding-top: 200px;
+    z-index: 100;
+}
+
+.modalBox {
+    position: fixed;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: #fff;
+    top: 20%;
+    width: 92%;
+    left: 4%;
+    z-index: 101;
+}
+
+.modalContent {
+    text-align: center;
+    font-size: 0.5rem;
+}
+
+.modalContent button {
+    margin-top: 15px;
+    padding: 5px 20px;
+    border-radius: 5px;
+    background-color: #000;
+    color: #fff;
+    border: 1px solid #000;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+@media (min-width: 450px) {
+    .modalBox {
+        width:  400px;;       
+        left: calc(50% - 200px)
+    }
+}

@@ -1,0 +1,105 @@
+.mainAuth {
+    background-color: #2b2b2b;
+    color: #fff;
+    font-weight: bold;
+    letter-spacing: 2px;
+    padding: 50px 0;
+    min-width: 300px;
+    max-width: 350px;
+    margin: 100px auto;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.24);
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5); 
+}
+
+.mainAuth button, .mainAuth input {
+    font-family: inherit;
+    font-weight: bold;
+    letter-spacing: 2px;
+    cursor: pointer;
+}
+
+.mainAuth label {
+    margin-bottom: 20px;
+}
+
+.mainAuth input {
+    width: 200px;
+    height: 30px;
+    border-radius: 3px;
+}
+
+.two-buttons {
+    border-radius: 5px;
+    padding: 5px 10px;
+    background-color: #fff;
+    border: 1px solid #fff;
+}
+
+.googleAuth {
+    border: 1px solid #fff;
+    border-radius: 5px;
+}
+
+.googleA {
+    display: inline-block;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #000;
+}
+
+.toggleAuth {
+    font-size: 0.75rem;
+}
+
+.submitAuth {
+    font-size: 1.1rem;
+    width: 200px;
+}
+
+.logoutButton {
+    padding: 3px 5px;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    border-radius: 5px;
+}
+
+.spinner-ui {
+    color: #fff;
+}
+
+/* HOVER */
+@media (min-width: 950px) {
+
+    .toggleAuth:hover, .submitAuth:hover, .googleAuth:hover {
+        background-color: rgba(0, 0, 0);
+        border: 1px solid #000;
+        color: #fff;
+    }
+    
+    .googleAuth:hover .googleA {
+        color: #fff;
+    }
+
+    .labelUsernamePassword:hover {
+        color:rgba(0, 0, 0, 0.75);        
+    }
+    
+    .userName:hover {
+        color: rgba(0, 0, 0, 0.8);
+    }
+    
+    .logoutButton:hover {
+        color: #fff;
+        background-color: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(0, 0, 0, 0.5);
+    }
+
+}
+
+/* responsive width for phones */
+@media (max-width: 400px) {
+    .mainAuth {
+        width: 95%;
+        min-width: 300px;
+    }
+}

@@ -1,0 +1,43 @@
+.pop-up {
+    position: fixed;
+    bottom: 50px;
+    width: 400px;
+    left: calc(50% - 200px);
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    padding: 10px 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.button {
+    font: inherit;
+    font-size: 0.8rem;
+    background-color: #000;
+    color: #fff;
+    border-radius: 5px;
+    border: 1px solid #000;
+    margin: 5px 10px 0 0;
+    padding: 0 5px;
+    cursor: pointer;
+}
+
+@media (max-width: 420px) {
+    .pop-up {
+        width: 90%;
+        left: 5%;
+        min-width: 300px;
+        bottom: 2.5px;
+    }
+
+    .button {
+        padding: 5px 12.5px;
+    }
+}

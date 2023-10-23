@@ -1,0 +1,14 @@
+name: Main Branch Pull Request
+on:
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v3
+      - name: Create fake certificates
+        run: mkdir certificates && echo 'fake' >> ./certificates/certificate.pem && echo 'fake' >> ./certificates/private_key.pem
+      - name: Build docker image
+        run: docker build -t app .
