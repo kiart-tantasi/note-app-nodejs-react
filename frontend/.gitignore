@@ -26,3 +26,6 @@ package-lock.json
 
 # certificates
 certificates
+
+# env files
+.env*
