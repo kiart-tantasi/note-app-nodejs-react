@@ -134,6 +134,8 @@ export default function Auth(props:{onRefreshData: () => void}) {
         }
     }
 
+    const publicDomain = process.env.REACT_APP_API_DOMAIN;
+
     // IF NOT LOGGED IN, SHOW LOGIN / REGISTER FORM
     if (!isLoggedIn) {
         return (
@@ -193,18 +195,20 @@ export default function Auth(props:{onRefreshData: () => void}) {
                     <CircularProgress size={25} color="inherit" className={styles["spinner-ui"]} />
 
                     }
-        
-                    <br/><br/>
-
-                    <button
-                        type="button"
-                        className={styles.googleAuth}>
-                        <a
-                        className={styles.googleA}
-                        href={`${process.env.REACT_APP_API_DOMAIN}/api/auth/google`}>
-                            เข้าสู่ระบบ/สมัครโดย GOOGLE
-                        </a>
-                    </button>
+                    {publicDomain !== undefined && (
+                        <>
+                            <br/><br/>
+                            <button
+                                type="button"
+                                className={styles.googleAuth}>
+                                <a
+                                className={styles.googleA}
+                                href={`${process.env.REACT_APP_API_DOMAIN}/api/auth/google`}>
+                                    เข้าสู่ระบบ/สมัครโดย GOOGLE
+                                </a>
+                            </button>
+                        </>
+                    )}
 
                 </form>
 
