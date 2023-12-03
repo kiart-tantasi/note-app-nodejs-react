@@ -58,3 +58,13 @@ Run
 ```
 docker run -p 443:443 -p 80:80 app
 ```
+
+# EC2 Manual Deployment
+
+- Prepare env file for both frontend and backend folder
+
+- Build frontend by command `npm run build` and put build folder in backend folder
+
+- Put file app.service at /etc/systemd/system/
+
+- Run `sudo systemctl start app.service` (you can change `start` to `stop`, `restart`, and `status`)

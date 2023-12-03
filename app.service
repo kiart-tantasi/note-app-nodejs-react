@@ -3,13 +3,13 @@ Description=noteapp
 After=multi-user.target
 
 [Service]
-ExecStart=sudo /home/admin/.nvm/versions/node/v16.15.0/bin/node /home/admin/note-app-nodejs-react/backend/app.js
+ExecStart=/home/admin/.nvm/versions/node/v16.15.0/bin/node /home/admin/note-app-nodejs-react/backend/app.js
 Restart=always
 RestartSec=10
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=noteapp
-User=ec2-user
+User=admin
 EnvironmentFile=/home/admin/note-app-nodejs-react/backend/.env
 
 [Install]
