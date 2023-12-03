@@ -110,3 +110,6 @@ app.env
 
 # kube
 deployment.yaml
+
+# react build
+build
