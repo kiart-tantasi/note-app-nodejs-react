@@ -19,6 +19,6 @@ RUN apk update && apk add nodejs
 WORKDIR /app
 COPY --from=NODEJS /app/. /app/.
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY certificates/certificate.pem /etc/ssl/ssl_certificate.pem
-COPY certificates/private_key.pem /etc/ssl/ssl_certificate_key.pem
+COPY certificates/ssl_certificate.pem /etc/ssl/ssl_certificate.pem
+COPY certificates/ssl_certificate_key.pem /etc/ssl/ssl_certificate_key.pem
 ENTRYPOINT nohup node app.js & nginx -g 'daemon off;'

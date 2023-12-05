@@ -46,7 +46,7 @@ This project contains both frontend (SPA React) and backend(Nodejs) together in 
 
 
 ## Https
-To use https, you need to put certificate.pem and private_key.pem in `./certificates/`.
+To use https, you need to put `ssl_certificate.pem` and `ssl_certificate_key.pem` in `./certificates/`. You can find both of them in Cloudflare
 If you do not need to use, please remove nginx steps in Dockerfile
 
 Build image
@@ -69,7 +69,7 @@ docker run -p 443:443 -p 80:80 app
 
 - Run `sudo systemctl start app.service` (you can change `start` to `stop`, `restart`, and `status`)
 
-- Put `certificate.pem` and `private_key.pem` at `/etc/ssl`. You can generate both of them from Cloudflare
+- Put `ssl_certificate.pem` and `ssl_certificate_key.pem` at `/etc/ssl`. You can generate both of them from Cloudflare
 
 - Copy `nginxec2debian.conf` and Paste at `/etc/nginx/nginx.conf`
 
