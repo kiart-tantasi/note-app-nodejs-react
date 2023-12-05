@@ -63,8 +63,14 @@ docker run -p 443:443 -p 80:80 app
 
 - Prepare env file for both frontend and backend folder
 
-- Build frontend by command `npm run build` and put build folder in backend folder
+- Build frontend by command `npm run build` and put generated build folder in backend folder
 
-- Put file app.service at /etc/systemd/system/
+- Put file `app.service at` `/etc/systemd/system/`
 
 - Run `sudo systemctl start app.service` (you can change `start` to `stop`, `restart`, and `status`)
+
+- Put `certificate.pem` and `private_key.pem` at `/etc/ssl`. You can generate both of them from Cloudflare
+
+- Copy `nginxec2debian.conf` and Paste at `/etc/nginx/nginx.conf`
+
+- Run `sudo systemctl start nginx` to start app at port 443
