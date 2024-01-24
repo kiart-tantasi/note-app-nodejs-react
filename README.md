@@ -1,13 +1,7 @@
 # Environment Variables
 
-## Frontend (OPTIONAL)
-Create file `.env` in `./frontend/`
-```
-REACT_APP_API_DOMAIN=<API-DOMAIN>
-```
-
 ## Backend
-Create file `.env` in `./backend/`
+Create file `.env` in `./backend/` which should already be git-ignored
 ```
 DB_URL=<MONGODB-URI> # mongodb+srv://...
 NODE_ENV=<ENVIRONMENT> # production
@@ -41,20 +35,10 @@ Running at http://localhost:4000
 Cannot use Google OAuth in development environment
 
 # Docker*
-Now this project is designed to run in EC2 instance directly and not through containerization. I left Dockerfile that I used in case I might need it in the future.
 
-# EC2 Manual Deployment
+First, prepare env files for both frontend and backend
 
-- Prepare `.env` file in both frontend and backend folder
-
-- Build frontend by command `npm run build` and put generated build folder in backend folder
-
-- Put file `app.service at` `/etc/systemd/system/`
-
-- Run `sudo systemctl start app.service` (you can change `start` to `stop`, `restart`, and `status`)
-
-- Put `ssl_certificate.pem` and `ssl_certificate_key.pem` at `/etc/ssl`. You can generate both of them from Cloudflare
-
-- Copy `nginxec2debian.conf` and Paste at `/etc/nginx/nginx.conf`
-
-- Run `sudo systemctl start nginx` to start app at port 443
+Build
+```
+docker build -t postitapp .
+```
