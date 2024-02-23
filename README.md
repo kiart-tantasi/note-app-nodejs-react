@@ -4,6 +4,13 @@
 
 # Environment Variables
 
+## Client
+`.env` for development
+`.env.production` for production build
+```
+REACT_APP_API_DOMAIN=<API-DOMAIN> # https://www.example.com
+```
+
 ## Backend
 Create file `.env` in `./backend/` which should already be git-ignored
 ```
