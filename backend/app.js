@@ -15,6 +15,7 @@ const dbUrl = process.env.DB_URL;
 mongoose.connect(dbUrl);
 const User = require("./mongodb/mongodb");
 // ------------------ MIDDLEWARE ------------------ //
+app.use(requestLogger());
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "build")));
@@ -123,3 +124,17 @@ function blockNotAuthenticated(req,res,next) {
 
 const port = process.env.PORT;
 app.listen(port, () => console.log("running on", port));
+
+function requestLogger() {
+	return function (req, res, next) {
+		const start = new Date().getTime();
+		res.on("finish", function () {
+			console.log(
+				`${res.statusCode}, ${req.url}, ${
+					new Date().getTime() - start
+				} ms`
+			);
+		});
+		next();
+	};
+}
