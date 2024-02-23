@@ -1,0 +1,15 @@
+[Unit]
+Description=postitapp
+After=multi-user.target
+
+[Service]
+ExecStart=node /root/note-app-nodejs-react/backend/app.js
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=postitapp
+User=root
+
+[Install]
+WantedBy=multi-user.target
