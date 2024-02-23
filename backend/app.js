@@ -103,6 +103,10 @@ app.patch("/api/posts/:itemId", blockNotAuthenticated, (req,res) => {
     )
 })
 
+app.get("/api/health", function (_, res) {
+    return res.status(200).send();
+});
+
 // EVERY OTHERS' AND REACT'S ROUTES
 app.get("/*", function(req,res) {
     res.sendFile(path.join(__dirname, "build", "index.html"));
