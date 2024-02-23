@@ -5,14 +5,15 @@
 # Environment Variables
 
 ## Client
-`.env` for development
-`.env.production` for production build
+`.env` for `npm start`
+
+`.env.production for `npm run build`
 ```
 REACT_APP_API_DOMAIN=<API-DOMAIN> # https://www.example.com
 ```
 
 ## Backend
-Create file `.env` in `./backend/` which should already be git-ignored
+`.env` for both development and production (`node app.js`)
 ```
 DB_URL=<MONGODB-URI> # mongodb+srv://...
 NODE_ENV=<ENVIRONMENT> # production
@@ -28,14 +29,14 @@ Please look at **Google Cloud Console, APIs and Services, Credentials**
 
 # Development
 
-## frontned
+## Frontned
 ```
 cd frontend
 npm start # You need to use Nodejs version 16.15+
 ```
 Running at http://localhost:3000
 
-## backend
+## Backend
 ```
 cd backend
 node app.js
