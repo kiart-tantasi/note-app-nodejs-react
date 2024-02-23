@@ -3,7 +3,7 @@ Description=postitapp
 After=multi-user.target
 
 [Service]
-ExecStart=node /root/note-app-nodejs-react/backend/app.js
+ExecStart=/root/.nvm/versions/node/v18.19.1/bin/node /root/note-app-nodejs-react/backend/app.js
 Restart=always
 RestartSec=10
 StandardOutput=syslog
