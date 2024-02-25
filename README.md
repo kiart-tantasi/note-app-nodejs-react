@@ -9,7 +9,7 @@
 
 `.env.production for `npm run build`
 ```
-REACT_APP_API_DOMAIN=<API-DOMAIN> # https://www.example.com
+REACT_APP_API_DOMAIN=<API-DOMAIN> # if left empty, it will be relative path
 ```
 
 ## Backend
